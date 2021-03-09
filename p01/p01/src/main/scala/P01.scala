@@ -1,8 +1,5 @@
 package com.shepardo.p99
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
-
 // class P01[T >: Null] {
 class P01[T] {
   def last(l: List[T]) : Option[T] = {
