@@ -16,6 +16,9 @@ class P21[T] {
           lb.addOne(elem)
         }
         lb.addOne(xi)
+        if (pos < targetPos) {
+          lb.addOne(elem)
+        }
         lb.toList
       case xi :: xs =>
         if (pos == targetPos) {
@@ -23,6 +26,8 @@ class P21[T] {
         }
         lb.addOne(xi)
         doInsertAt(elem, pos + 1, targetPos, xs, lb)
+      case Nil =>
+        List()
       case _ =>
         throw new IllegalArgumentException("'l' not found")
     }
