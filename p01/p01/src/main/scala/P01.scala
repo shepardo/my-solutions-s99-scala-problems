@@ -1,7 +1,11 @@
 package com.shepardo.p99
 
+trait P01Interface[T] {
+  def last(l: List[T]) : Option[T]
+}
+
 // class P01[T >: Null] {
-class P01[T] {
+class P01[T] extends P01Interface[T] {
   def last(l: List[T]) : Option[T] = {
       l match {
           case x::Nil => Some(x)
