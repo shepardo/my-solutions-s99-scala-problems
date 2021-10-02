@@ -7,17 +7,26 @@ import org.scalatest.matchers.should.Matchers
 
 class P02Test extends AnyFunSuite with Matchers {
 
-  val p02 = new P02[Int]()
+  def createGenerators = { 
+    val gens = Array(new P02Mine[Int](), new P02PenultimateBuiltin[Int](), new P02PenultimateRecursive[Int]())
+    for( x <- gens) yield x
+  }
 
   test("that returns element for single element's list") {
-    p02.penultimate(List(3)) should equal(None)
+    for (p02 <- createGenerators) {
+      p02.penultimate(List(3)) should equal(None)
+    }
   }
 
   test("that returns none for empty list") {
-    p02.penultimate(List()) should be(None)
+    for (p02 <- createGenerators) {
+      p02.penultimate(List()) should be(None)
+    }
   }
 
   test("that returns last element of list") {
-    p02.penultimate(List(1, 1, 2, 3, 5, 8)) should be(Some(5))
+    for (p02 <- createGenerators) {
+      p02.penultimate(List(1, 1, 2, 3, 5, 8)) should be(Some(5))
+    }
   }
 }

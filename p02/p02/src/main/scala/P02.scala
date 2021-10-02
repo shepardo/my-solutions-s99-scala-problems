@@ -1,6 +1,10 @@
 package com.shepardo.p99
 
-class P02[T] {
+trait P02Interface[T] {
+  def penultimate(l: List[T]) : Option[T]
+}
+
+class P02Mine[T] extends P02Interface[T] {
   def penultimate(l: List[T]) : Option[T] = {
       doPenultimate(l, None)
   }
@@ -14,16 +18,29 @@ class P02[T] {
   }
 }
 
+class P02PenultimateBuiltin[T] extends P02Interface[T] {
+  // Again, with builtins this is easy.
+  def penultimate(ls: List[T]): Option[T] =
+    if (ls.isEmpty) None
+    else if (ls.init.isEmpty) None
+    else Some(ls.init.last)
+}
+
+class P02PenultimateRecursive[T] extends P02Interface[T] {
+    def penultimate(ls: List[T]): Option[T] = ls match {
+    case h :: _ :: Nil => Some(h)
+    case _ :: tail     => penultimate(tail)
+    case _             => None
+  }
+}
+
 // P02 (*) Find the last but one element of a list.
 //     Example:
 //     scala> penultimate(List(1, 1, 2, 3, 5, 8))
 //     res0: Int = 5
 
 object P02 {
-  // Again, with builtins this is easy.
-  def penultimateBuiltin[A](ls: List[A]): A =
-    if (ls.isEmpty) throw new NoSuchElementException
-    else ls.init.last
+
 
   // But pattern matching also makes it easy.
   def penultimateRecursive[A](ls: List[A]): A = ls match {
@@ -33,6 +50,7 @@ object P02 {
   }
   
   
+
   // Just for fun, let's look at making a generic lastNth function.
 
   // An obvious modification of the builtin solution works.
