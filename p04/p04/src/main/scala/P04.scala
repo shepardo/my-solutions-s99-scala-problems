@@ -1,6 +1,10 @@
 package com.shepardo.p99
 
-class P04[T] {
+trait P04Interface[T] {
+  def length(l: List[T]) : Int
+}
+
+class P04Mine[T] extends P04Interface[T] {
   def length(l: List[T]) : Int = {
       l match {
         case x :: Nil => 1
@@ -15,17 +19,22 @@ class P04[T] {
 //     scala> length(List(1, 1, 2, 3, 5, 8))
 //     res0: Int = 6
 
-object P04 {
+
+class P04Builtin[T] extends P04Interface[T] {
   // Builtins.
-  def lengthBuiltin[A](ls: List[A]): Int = ls.length
+  def length(ls: List[T]): Int = ls.length
+}
 
+class P04Recursive[T] extends P04Interface[T] {
   // Simple recursive solution.
-  def lengthRecursive[A](ls: List[A]): Int = ls match {
+  def length(ls: List[T]): Int = ls match {
     case Nil       => 0
-    case _ :: tail => 1 + lengthRecursive(tail)
+    case _ :: tail => 1 + length(tail)
   }
+}
 
-  // Tail recursive solution.  Theoretically more efficient; with tail-call
+class P04TailRecursive[T] extends P04Interface[T] {
+// Tail recursive solution.  Theoretically more efficient; with tail-call
   // elimination in the compiler, this would run in constant space.
   // Unfortunately, the JVM doesn't do tail-call elimination in the general
   // case.  Scala *will* do it if the method is either final or is a local
@@ -33,14 +42,16 @@ object P04 {
   // be properly optimized.
   // For more information, see
   // http://blog.richdougherty.com/2009/04/tail-calls-tailrec-and-trampolines.html
-  def lengthTailRecursive[A](ls: List[A]): Int = {
-    def lengthR(result: Int, curList: List[A]): Int = curList match {
+  def length(ls: List[T]): Int = {
+    def lengthR(result: Int, curList: List[T]): Int = curList match {
       case Nil       => result
       case _ :: tail => lengthR(result + 1, tail)
     }
     lengthR(0, ls)
   }
+}
 
+class P04Functional[T] extends P04Interface[T] {
   // More pure functional solution, with folds.
-  def lengthFunctional[A](ls: List[A]): Int = ls.foldLeft(0) { (c, _) => c + 1 }
+  def length(ls: List[T]): Int = ls.foldLeft(0) { (c, _) => c + 1 }
 }
