@@ -4,26 +4,36 @@ import scala.collection.mutable.ListBuffer
 
 class P13[T] {
 
-  def decode(l: List[Any]): List[T] = {
-    val lb = ListBuffer[T]()
-    doDecode(l, lb)
+  def encodeDirect(ls: List[T]): List[(Int, T)] = {
+    val lb = ListBuffer[(Int, T)]()
+    doEncodeDirect(ls, lb, None, 0)
     lb.toList
   }
 
-  private def doDecode(l: List[Any], lb: ListBuffer[T]): Unit = {
+  private def doEncodeDirect(l: List[T], lb: ListBuffer[(Int, T)], prev: Option[T], repeats: Int): Unit = {
     l match {
       case xi :: Nil =>
-        xi match {
-          case t: (Int, T) => lb.addAll(List.fill(t._1)(t._2))
-          case i : T => lb.addOne(i)
+        if (prev.isDefined) {
+          if (prev.get != xi) {
+            lb.addOne((repeats, prev.get))
+            lb.addOne((1, xi))
+          } else {
+            lb.addOne((repeats + 1, xi))  
+          }
+        } else {
+          lb.addOne((1, xi))
         }
-      case xi :: xs => {
-        xi match {
-          case t: (Int, T) => lb.addAll(List.fill(t._1)(t._2))
-          case i: T => lb.addOne(i)
+      case xi :: xs =>
+        if (prev.isDefined) {
+          if (prev.get != xi) {
+            lb.addOne((repeats, prev.get))
+            doEncodeDirect(xs, lb, Some(xi), 1)
+          } else {
+            doEncodeDirect(xs, lb, Some(xi), repeats + 1)
+          }
+        } else {
+          doEncodeDirect(xs, lb, Some(xi), 1)
         }
-        doDecode(xs, lb)
-      }
       case _ =>
     }
   }
