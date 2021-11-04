@@ -2,7 +2,11 @@ package com.shepardo.p99
 
 import scala.collection.mutable.ListBuffer
 
-class P05[T] {
+trait P05Interface[T] {
+  def reverse(l: List[T]) : List[T]
+}
+
+class P05Mine[T] extends P05Interface[T] {
   def reverse(l: List[T]) : List[T] = {
       val lb = new ListBuffer[T]()
       doReverse(l, lb).toList
@@ -22,26 +26,32 @@ class P05[T] {
 //     scala> reverse(List(1, 1, 2, 3, 5, 8))
 //     res0: List[Int] = List(8, 5, 3, 2, 1, 1)
 
-object P05 {
-  // Builtin.
-  def reverseBuiltin[A](ls: List[A]): List[A] = ls.reverse
+class P05Builtin[T] extends P05Interface[T] {
+  def reverse(ls: List[T]): List[T] = ls.reverse
+}
 
+class P05SimpleRecursive[T] extends P05Interface[T] {
   // Simple recursive.  O(n^2)
-  def reverseRecursive[A](ls: List[A]): List[A] = ls match {
+  def reverse(ls: List[T]): List[T] = ls match {
     case Nil       => Nil
-    case h :: tail => reverseRecursive(tail) ::: List(h)
+    case h :: tail => reverse(tail) ::: List(h)
   }
+}
 
+class P05TailRecursive[T] extends P05Interface[T] {
   // Tail recursive.
-  def reverseTailRecursive[A](ls: List[A]): List[A] = {
-    def reverseR(result: List[A], curList: List[A]): List[A] = curList match {
+  def reverse(ls: List[T]): List[T] = {
+    def reverseR(result: List[T], curList: List[T]): List[T] = curList match {
       case Nil       => result
       case h :: tail => reverseR(h :: result, tail)
     }
     reverseR(Nil, ls)
   }
-
-  // Pure functional
-  def reverseFunctional[A](ls: List[A]): List[A] =
-    ls.foldLeft(List[A]()) { (r, h) => h :: r }
 }
+
+class P05PureFunctional[T] extends P05Interface[T] {
+  // Pure functional
+  def reverse(ls: List[T]): List[T] =
+    ls.foldLeft(List[T]()) { (r, h) => h :: r }
+}
+
