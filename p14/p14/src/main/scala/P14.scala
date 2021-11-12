@@ -2,7 +2,11 @@ package com.shepardo.p99
 
 import scala.collection.mutable.ListBuffer
 
-class P14[T] {
+trait P14Interface[T] {
+  def duplicate(l: List[T]): List[T]
+}
+
+class P14Mine[T] extends P14Interface[T] {
 
   def duplicate(l: List[T]): List[T] = {
     val lb = new ListBuffer[T]()
@@ -29,7 +33,7 @@ class P14[T] {
 //     scala> duplicate(List('a, 'b, 'c, 'c, 'd))
 //     res0: List[Symbol] = List('a, 'a, 'b, 'b, 'c, 'c, 'c, 'c, 'd, 'd)
 
-object P14 {
-  def duplicate[A](ls: List[A]): List[A] = ls flatMap { e => List(e, e) }
+class P14Functional[T] extends P14Interface[T] {
+  def duplicate(ls: List[T]): List[T] = ls flatMap { e => List(e, e) }
 }
 
