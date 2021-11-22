@@ -2,7 +2,11 @@ package com.shepardo.p99
 
 import scala.collection.mutable.ListBuffer
 
-class P15[T] {
+trait P15Interface[T] {
+  def duplicateN(reps: Int, l: List[T]): List[T]
+}
+
+class P15Mine[T] extends P15Interface[T]{
 
   def duplicateN(reps: Int, l: List[T]): List[T] = {
     val lb = new ListBuffer[T]()
@@ -26,8 +30,8 @@ class P15[T] {
 //     Example:
 //     scala> duplicateN(3, List('a, 'b, 'c, 'c, 'd))
 //     res0: List[Symbol] = List('a, 'a, 'a, 'b, 'b, 'b, 'c, 'c, 'c, 'c, 'c, 'c, 'd, 'd, 'd)
-
-object P15 {
-  def duplicateN[A](n: Int, ls: List[A]): List[A] =
-    ls flatMap { List.make(n, _) }
+class P15Functional[T] extends P15Interface[T] {
+  def duplicateN(reps: Int, l: List[T]): List[T] =
+    //ls flatMap { List.make(n, _) }
+    l flatMap { List.fill(reps)( _) }
 }
