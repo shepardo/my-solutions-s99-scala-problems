@@ -5,6 +5,11 @@ import org.scalatest.matchers.should.Matchers
 
 class P16Spec extends AnyFunSuite with Matchers {
 
+  def createGenerators[T] = {
+    val gens = Array(new P14Mine[T](), new P14Functional[T]())
+    for(x <- gens) yield x
+  }
+
   test("With empty list") {
     val p16 = new P16[Int]()
     p16.drop(3, List()) should be(List())
