@@ -2,7 +2,11 @@ package com.shepardo.p99
 
 import scala.collection.mutable.ListBuffer
 
-class P16[T] {
+trait P16Interface[T] {
+  def drop(nth: Int, l: List[T]): List[T]
+}
+
+class P16Mine[T] extends P16Interface[T] {
 
   def drop(nth: Int, l: List[T]): List[T] = {
     val lb = new ListBuffer[T]()
@@ -31,7 +35,13 @@ class P16[T] {
 //     scala> drop(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
 //     res0: List[Symbol] = List('a, 'b, 'd, 'e, 'g, 'h, 'j, 'k)
 
-object P16 {
+class P16Recursive[T] extends P16Interface[T] {
+  def drop(nth: Int, l: List[T]): List[T] = {
+    
+  }
+}
+
+object P16 extends P16Interface[T] {
   // Simple recursion.
   def dropRecursive[A](n: Int, ls: List[A]): List[A] = {
     def dropR(c: Int, curList: List[A]): List[A] = (c, curList) match {
