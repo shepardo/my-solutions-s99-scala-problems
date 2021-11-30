@@ -2,7 +2,11 @@ package com.shepardo.p99
 
 import scala.collection.mutable.ListBuffer
 
-class P17[T] {
+trait P17Interface[T] {
+  def split(pos: Int, l: List[T]): (List[T], List[T])
+}
+
+class P17Mine[T] extends P17Interface[T] {
   def split(pos: Int, l: List[T]): (List[T], List[T]) = {
     val lb = new ListBuffer[T]()
     doSplit(pos, l, lb, 1)
@@ -34,32 +38,38 @@ class P17[T] {
 //     scala> split(3, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
 //     res0: (List[Symbol], List[Symbol]) = (List('a, 'b, 'c),List('d, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
 
-object P17 {
+class P17Builtin[T] extends P17Interface[T] {
   // Builtin.
-  def splitBuiltin[A](n: Int, ls: List[A]): (List[A], List[A]) = ls.splitAt(n)
+  def split(pos: Int, l: List[T]): (List[T], List[T]) = l.splitAt(pos)
+}
 
+class P17Recursive[T] extends P17Interface[T] {
   // Simple recursion.
-  def splitRecursive[A](n: Int, ls: List[A]): (List[A], List[A]) = (n, ls) match {
+  def split(pos: Int, l: List[T]): (List[T], List[T]) = (pos, l) match {
     case (_, Nil)       => (Nil, Nil)
     case (0, list)      => (Nil, list)
-    case (n, h :: tail) => {
-      val (pre, post) = splitRecursive(n - 1, tail)
+    case (pos, h :: tail) => {
+      val (pre, post) = split(pos - 1, tail)
       (h :: pre, post)
     }
   }
+}
 
+class P17TailRecurisve[T] extends P17Interface[T] {
   // Tail recursive.
-  def splitTailRecursive[A](n: Int, ls: List[A]): (List[A], List[A]) = {
-    def splitR(curN: Int, curL: List[A], pre: List[A]): (List[A], List[A]) =
+  def split(pos: Int, l: List[T]): (List[T], List[T]) = {
+    def splitR(curN: Int, curL: List[T], pre: List[T]): (List[T], List[T]) =
       (curN, curL) match {
         case (_, Nil)       => (pre.reverse, Nil)
         case (0, list)      => (pre.reverse, list)
-        case (n, h :: tail) => splitR(n - 1, tail, h :: pre)
+        case (pos, h :: tail) => splitR(pos - 1, tail, h :: pre)
       }
-    splitR(n, ls, Nil)
+    splitR(pos, l, Nil)
   }
+}
 
+class P17Functional[T] extends P17Interface[T] {
   // Functional (barely not "builtin").
-  def splitFunctional[A](n: Int, ls: List[A]): (List[A], List[A]) =
-    (ls.take(n), ls.drop(n))
+  def split(pos: Int, l: List[T]): (List[T], List[T]) =
+    (l.take(pos), l.drop(pos))
 }
