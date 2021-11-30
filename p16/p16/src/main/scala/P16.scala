@@ -36,33 +36,32 @@ class P16Mine[T] extends P16Interface[T] {
 //     res0: List[Symbol] = List('a, 'b, 'd, 'e, 'g, 'h, 'j, 'k)
 
 class P16Recursive[T] extends P16Interface[T] {
+  // Simple recursion.
   def drop(nth: Int, l: List[T]): List[T] = {
-    
+    def dropR(c: Int, curList: List[T]): List[T] = (c, curList) match {
+      case (_, Nil)       => Nil
+      case (1, _ :: tail) => dropR(nth, tail)
+      case (_, h :: tail) => h :: dropR(c - 1, tail)
+    }
+    dropR(nth, l)
   }
 }
 
-object P16 extends P16Interface[T] {
-  // Simple recursion.
-  def dropRecursive[A](n: Int, ls: List[A]): List[A] = {
-    def dropR(c: Int, curList: List[A]): List[A] = (c, curList) match {
-      case (_, Nil)       => Nil
-      case (1, _ :: tail) => dropR(n, tail)
-      case (_, h :: tail) => h :: dropR(c - 1, tail)
-    }
-    dropR(n, ls)
-  }
-
+class P16TailRecursive[T] extends P16Interface[T] {
   // Tail recursive.
-  def dropTailRecursive[A](n: Int, ls: List[A]): List[A] = {
-    def dropR(c: Int, curList: List[A], result: List[A]): List[A] = (c, curList) match {
+  def drop(nth: Int, l: List[T]): List[T] = {
+    def dropR(c: Int, curList: List[T], result: List[T]): List[T] = (c, curList) match {
       case (_, Nil)       => result.reverse
-      case (1, _ :: tail) => dropR(n, tail, result)
+      case (1, _ :: tail) => dropR(nth, tail, result)
       case (_, h :: tail) => dropR(c - 1, tail, h :: result)
     }
-    dropR(n, ls, Nil)
+    dropR(nth, l, Nil)
   }
+}
 
-  // Functional.
-  def dropFunctional[A](n: Int, ls: List[A]): List[A] = 
-    ls.zipWithIndex filter { v => (v._2 + 1) % n != 0 } map { _._1 }
+class P16TFunctional[T] extends P16Interface[T] {
+  // Functional
+  def drop(nth: Int, l: List[T]): List[T] = {
+    l.zipWithIndex filter { v => (v._2 + 1) % nth != 0 } map { _._1 }
+  }
 }
