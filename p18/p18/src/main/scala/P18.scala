@@ -3,7 +3,11 @@ package com.shepardo.p99
 
 import scala.collection.mutable.ListBuffer
 
-class P18[T] {
+trait P18Interface[T] {
+  def slice(left: Int, right: Int, l: List[T]): List[T]
+}
+
+class P18Mine[T] extends P18Interface[T] {
   def slice(left: Int, right: Int, l: List[T]): List[T] = {
     val lb = new ListBuffer[T]()
     doSlice(left, right, l, lb, 0)
@@ -34,6 +38,12 @@ class P18[T] {
 //     Example:
 //     scala> slice(3, 7, List('a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k))
 //     res0: List[Symbol] = List('d, 'e, 'f, 'g)
+
+class P18Builtin[T] extends P18Interface[T] {
+  // Builtin.
+  def slice(start: Int, end: Int, l: List[T]): List[T] =
+    l.slice(start, end)
+}
 
 object P18 {
   // Builtin.
