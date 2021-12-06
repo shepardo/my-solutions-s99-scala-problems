@@ -56,11 +56,9 @@ class P18Recursive[T] extends P18Interface[T] {
     }
 }
 
-object P18 {
-
-  
+class P18TailRecursive[T] extends P18Interface[T] {
   // Tail recursive, using pattern matching.
-  def sliceTailRecursive[A](start: Int, end: Int, ls: List[A]): List[A] = {
+  def slice(start: Int, end: Int, ls: List[T]): List[T] =
     def sliceR(count: Int, curList: List[A], result: List[A]): List[A] =
       (count, curList) match {
         case (_, Nil)                     => result.reverse
@@ -70,10 +68,12 @@ object P18 {
       }
     sliceR(0, ls, Nil)
   }
+}
 
+class P18TailRecursive2[T] extends P18Interface[T] {
   // Since several of the patterns are similar, we can condense the tail recursive
   // solution a little.
-  def sliceTailRecursive2[A](start: Int, end: Int, ls: List[A]): List[A] = {
+  def slice(start: Int, end: Int, ls: List[T]): List[T] =
     def sliceR(count: Int, curList: List[A], result: List[A]): List[A] = {
       if (curList.isEmpty || count >= end) result.reverse
       else sliceR(count + 1, curList.tail,
@@ -82,8 +82,10 @@ object P18 {
     }
     sliceR(0, ls, Nil)
   }
+}
 
+class P18Functional[T] extends P18Interface[T] {
   // Functional.
-  def sliceFunctional[A](s: Int, e: Int, ls: List[A]): List[A] =
+  def slice(start: Int, end: Int, ls: List[T]): List[T] =
     ls drop s take (e - (s max 0))
 }
