@@ -41,24 +41,24 @@ class P18Mine[T] extends P18Interface[T] {
 
 class P18Builtin[T] extends P18Interface[T] {
   // Builtin.
-  def slice(start: Int, end: Int, l: List[T]): List[T] =
-    l.slice(start, end)
+  def slice(start: Int, end: Int, ls: List[T]): List[T] =
+    ls.slice(start, end)
 }
 
-object P18 {
-  // Builtin.
-  def sliceBuiltin[A](start: Int, end: Int, ls: List[A]): List[A] =
-    ls.slice(start, end)
-
+class P18Recursive[T] extends P18Interface[T] {
   // Simple recursive.
-  def sliceRecursive[A](start: Int, end: Int, ls: List[A]): List[A] =
+  def slice(start: Int, end: Int, ls: List[T]): List[T] =
     (start, end, ls) match {
       case (_, _, Nil)                 => Nil
       case (_, e, _)         if e <= 0 => Nil
       case (s, e, h :: tail) if s <= 0 => h :: sliceRecursive(0, e - 1, tail)
       case (s, e, h :: tail)           => sliceRecursive(s - 1, e - 1, tail)
     }
+}
 
+object P18 {
+
+  
   // Tail recursive, using pattern matching.
   def sliceTailRecursive[A](start: Int, end: Int, ls: List[A]): List[A] = {
     def sliceR(count: Int, curList: List[A], result: List[A]): List[A] =
