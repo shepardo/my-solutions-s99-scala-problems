@@ -51,15 +51,15 @@ class P18Recursive[T] extends P18Interface[T] {
     (start, end, ls) match {
       case (_, _, Nil)                 => Nil
       case (_, e, _)         if e <= 0 => Nil
-      case (s, e, h :: tail) if s <= 0 => h :: sliceRecursive(0, e - 1, tail)
-      case (s, e, h :: tail)           => sliceRecursive(s - 1, e - 1, tail)
+      case (s, e, h :: tail) if s <= 0 => h :: slice(0, e - 1, tail)
+      case (s, e, h :: tail)           => slice(s - 1, e - 1, tail)
     }
 }
 
 class P18TailRecursive[T] extends P18Interface[T] {
   // Tail recursive, using pattern matching.
-  def slice(start: Int, end: Int, ls: List[T]): List[T] =
-    def sliceR(count: Int, curList: List[A], result: List[A]): List[A] =
+  def slice(start: Int, end: Int, ls: List[T]): List[T] = {
+    def sliceR(count: Int, curList: List[T], result: List[T]): List[T] =
       (count, curList) match {
         case (_, Nil)                     => result.reverse
         case (c, h :: tail) if end <= c   => result.reverse
@@ -73,8 +73,8 @@ class P18TailRecursive[T] extends P18Interface[T] {
 class P18TailRecursive2[T] extends P18Interface[T] {
   // Since several of the patterns are similar, we can condense the tail recursive
   // solution a little.
-  def slice(start: Int, end: Int, ls: List[T]): List[T] =
-    def sliceR(count: Int, curList: List[A], result: List[A]): List[A] = {
+  def slice(start: Int, end: Int, ls: List[T]): List[T] = {
+    def sliceR(count: Int, curList: List[T], result: List[T]): List[T] = {
       if (curList.isEmpty || count >= end) result.reverse
       else sliceR(count + 1, curList.tail,
                   if (count >= start) curList.head :: result
@@ -86,6 +86,6 @@ class P18TailRecursive2[T] extends P18Interface[T] {
 
 class P18Functional[T] extends P18Interface[T] {
   // Functional.
-  def slice(start: Int, end: Int, ls: List[T]): List[T] =
+  def slice(s: Int, e: Int, ls: List[T]): List[T] =
     ls drop s take (e - (s max 0))
 }

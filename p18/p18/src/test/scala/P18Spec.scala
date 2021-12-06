@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 class P18Spec extends AnyFunSuite with Matchers {
 
   def createGenerators[T] = {
-    val gens = Array(new P18Mine[T]())
+    val gens = Array(new P18Mine[T](), new P18Builtin[T](), new P18Recursive[T](), new P18TailRecursive[T](), new P18TailRecursive2[T](), new P18Functional[T]())
     for(x <- gens) yield x
   }
 
